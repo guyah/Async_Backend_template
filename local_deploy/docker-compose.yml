@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  node-app:
+    container_name: node-app
+    restart: unless-stopped
+    build:
+      context: ./gui
+      dockerfile: Dockerfile
+    
+  caddy:
+    image: caddy:2.6.4-alpine
+    deploy:
+      replicas: 1
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
