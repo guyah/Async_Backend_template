@@ -1,5 +1,7 @@
-https://35.180.125.31/ {
-  
+localhost {
+  basicauth /* {
+        admin $2a$12$UrVXH.NJ.BG9Bw4390pt/OjRoCo0RN7oHIz2ghzzNcNn/VvpEALsO
+  }
   reverse_proxy node-app:3000  {
     header_down Strict-Transport-Security max-age=31536000;
   }
@@ -8,3 +10,4 @@ https://35.180.125.31/ {
   # Always serve the index page (1 page app)
   try_files {path} /index.html
 }
+
