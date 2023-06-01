@@ -1,13 +1,18 @@
-13.38.20.148.nip.io {
-  basicauth /* {
-        admin $2a$12$UrVXH.NJ.BG9Bw4390pt/OjRoCo0RN7oHIz2ghzzNcNn/VvpEALsO
-  }
+localhost {
+  
   reverse_proxy node-app:3000  {
     header_down Strict-Transport-Security max-age=31536000;
   }
+
   root * /var/www/html
   file_server
   # Always serve the index page (1 page app)
   try_files {path} /index.html
+
 }
 
+rabbitmq.localhost {
+    reverse_proxy host.docker.internal:15672 {
+      header_down Strict-Transport-Security max-age=31536000;
+    }
+}

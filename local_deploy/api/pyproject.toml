@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "api"
+version = "0.1.0"
+description = ""
+authors = ["AbiHanna-Guy <guyabihanna@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+celery = "^5.2.7"
+fastapi = "^0.95.2"
+pandas = "^2.0.2"
+jupyter = "^1.0.0"
+notebook = "^6.5.4"
+hypercorn = "^0.14.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -12,15 +12,73 @@ services:
     deploy:
       replicas: 1
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./caddy/site:/srv
       - caddy_data:/data
       - caddy_config:/config
+  
+  rabbitmq:
+    image: rabbitmq:3.9-management-alpine
+    ports:
+      - '4369:4369'
+      - '5551:5551'
+      - '5552:5552'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_SECURE_PASSWORD=yes
+      - RABBITMQ_LOGS=-
+      - RABBITMQ_VHOSTS=/api
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - rabbit:/var/lib/rabbitmq/
+      - rabbitcfg:/etc/rabbitmq/
+
+  api:
+    image: llm_ops/api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: ./scripts/api.sh
+    ports:
+      - '8000:80'
+    depends_on:
+      - rabbitmq
+    env_file:
+      - ./api/.env
+    volumes:
+      - ./api/:/srv/http/api/
+      - ./api/uploads:/uploads
+    environment:
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq:5672//
+      - API_URL=http://localhost:80
+
+  worker:
+    image: llm_ops/worker
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    command: ./scripts/worker.sh
+    depends_on:
+      - rabbitmq
+      - api
+    env_file:
+      - ./api/.env
+    environment:
+      - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq:5672//
+      - API_URL=http://api:80
+    volumes:
+      - ./api/:/srv/http/api/
+      - ./api/uploads:/uploads
 
 volumes:
   caddy_data:
   caddy_config:
+  rabbit:
+  rabbitcfg:
