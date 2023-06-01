@@ -11,4 +11,4 @@ WORKDIR /srv/http/api
 COPY pyproject.toml poetry.lock /srv/http/api/
 
 RUN poetry install --no-root
-# ADD srcs ./srcs
+ADD srcs ./srcs

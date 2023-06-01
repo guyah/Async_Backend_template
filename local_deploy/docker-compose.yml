@@ -1,5 +1,19 @@
 version: '3.1'
 services:
+  postgres:
+    image: llm_ops/postgres
+    build:
+      context: ./api
+      dockerfile: Dockerfile.db
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=base_table
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  
   node-app:
     container_name: node-app
     restart: unless-stopped
@@ -47,7 +61,7 @@ services:
       dockerfile: Dockerfile
     command: ./scripts/api.sh
     ports:
-      - '8000:80'
+      - '127.0.0.1:8000:80'
     depends_on:
       - rabbitmq
     env_file:
@@ -57,6 +71,7 @@ services:
       - ./api/uploads:/uploads
     environment:
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq:5672//
+      - POSTGRES_URL=postgres://user:password@postgres:5432/base_table
       - API_URL=http://localhost:80
 
   worker:
@@ -72,6 +87,7 @@ services:
       - ./api/.env
     environment:
       - CELERY_BROKER_URL=amqp://admin:admin@rabbitmq:5672//
+      - POSTGRES_URL=postgres://user:password@postgres:5432/base_table
       - API_URL=http://api:80
     volumes:
       - ./api/:/srv/http/api/
@@ -82,3 +98,4 @@ volumes:
   caddy_config:
   rabbit:
   rabbitcfg:
+  postgres-data:
