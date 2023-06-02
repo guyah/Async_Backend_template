@@ -4,7 +4,6 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 import sentry_sdk
-import socketio
 from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
@@ -44,12 +43,11 @@ async def lifespan(app: FastAPI) -> None:
         generate_schemas=True,
         add_exception_handlers=True
     )
-    
     # seems to be necessary to be able to use "execute_query" from this context
     logger.debug("connecting database")
-    print("STARTING")
     await Tortoise.init(db_url=cfg.postgres_url, modules=TORTOISE_MODULES)
     await Tortoise.get_connection("default").execute_query("CREATE EXTENSION IF NOT EXISTS vector;")
+    await Tortoise.generate_schemas()
     yield
     await Tortoise.close_connections()
     logger.debug('disconnected from database')

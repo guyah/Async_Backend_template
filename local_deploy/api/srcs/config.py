@@ -30,7 +30,6 @@ TORTOISE_ORM = {
     "apps": {
         "models": {
             "models": [
-                "aerich.models",
                 "srcs.app.models",
                 "srcs.tasks.models"
             ],

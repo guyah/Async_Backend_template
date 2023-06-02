@@ -5,7 +5,6 @@ from srcs.main import sio
 
 logger = logging.getLogger(__name__)
 
-
 async def emit(event: str, payload: Any) -> bool:
     """Emits a notification from the worker.
     contact the notification endpoint on the main api

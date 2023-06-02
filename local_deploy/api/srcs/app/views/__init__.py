@@ -1,0 +1,1 @@
+import srcs.app.views.placeholder
