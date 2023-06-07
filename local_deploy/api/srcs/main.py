@@ -14,6 +14,7 @@ from fastapi_socketio import SocketManager
 from tortoise import Tortoise
 
 from tortoise.contrib.fastapi import register_tortoise
+from srcs.app.exceptions import InvalidTemplate
 from srcs.app.models import Placeholder
 
 from srcs.config import TORTOISE_MODULES, cfg
@@ -102,3 +103,7 @@ async def create_sample():
 @app.get('/health')
 def health():
     return {'healthy': True}
+
+@app.get("/sentry-debug")
+async def trigger_error():
+    raise InvalidTemplate("Invalid Endpoint!")
