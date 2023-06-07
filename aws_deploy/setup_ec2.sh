@@ -1,7 +1,6 @@
 #!/bin/bash
 
 #install main libraries
-sudo yum install git
 sudo yum install docker
 
 # add user to docker group
