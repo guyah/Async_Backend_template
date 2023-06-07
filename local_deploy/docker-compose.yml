@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   postgres:
-    image: llm_ops/postgres
+    image: postgres
     build:
       context: ./api
       dockerfile: Dockerfile.db
@@ -55,7 +55,7 @@ services:
       - rabbitcfg:/etc/rabbitmq/
 
   api:
-    image: llm_ops/api
+    image: api
     build:
       context: ./api
       dockerfile: Dockerfile
@@ -75,7 +75,7 @@ services:
       - API_URL=http://localhost:80
 
   worker:
-    image: llm_ops/worker
+    image: worker
     build:
       context: ./api
       dockerfile: Dockerfile
