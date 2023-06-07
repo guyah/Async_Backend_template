@@ -1,4 +1,4 @@
-localhost {
+15.237.81.229.nip.io {
   reverse_proxy node-app:3000  {
     header_down Strict-Transport-Security max-age=31536000;
   }
@@ -10,13 +10,13 @@ localhost {
 
 }
 
-rabbitmq.localhost {
+rabbitmq.15.237.81.229.nip.io {
     reverse_proxy host.docker.internal:15672 {
       header_down Strict-Transport-Security max-age=31536000;
     }
 }
 
-api.localhost {
+api.15.237.81.229.nip.io {
     reverse_proxy api:80 {
       header_down Strict-Transport-Security max-age=31536000;
     }
